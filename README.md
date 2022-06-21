@@ -1,5 +1,7 @@
 # versionize container
 
+> :warning: **Work in progress.** I will switch to pr-driven workflow as soon as a stable base was created.
+
 This repository contains a Dockerfile to create a container for the project [Versionize](https://github.com/versionize/versionize). With this container you don't need to install any dotnet version or the tool on your CI tool.
 
 This is useful for CI-Pipelines when your application was builded inside the container.
@@ -25,7 +27,7 @@ Depending on your system, it is required to pass your current user id to the con
 docker run -it \
     --user $(id -u):$(id -g) \
     --volume="<myproject-path>:/mount/" \
-    sergo-gmbh/versionize:latest <command-parameters>
+    sergogmbh/versionize:latest <command-parameters>
 ```
 
 project related settings can be set with the following commands (do not use --global option):
@@ -41,14 +43,14 @@ docker run -it \
     --user $(id -u):$(id -g) \
     --volume="<myproject-path>:/mount/" \
     --volume="${HOME}/.gitconfig:/root/.gitconfig" \
-    sergo-gmbh/versionize:latest <command-parameters>
+    sergogmbh/versionize:latest <command-parameters>
 ```
 
 
 
 Example: 
 ```
-docker run -v /Projects/my-dotnet-app:/mount/ -v ~/.gitconfig:/root/.gitconfig sergo-gmbh/versionize:latest --exit-insignificant-commits --changelog-all
+docker run -v /Projects/my-dotnet-app:/mount/ -v ~/.gitconfig:/root/.gitconfig sergogmbh/versionize:latest --exit-insignificant-commits --changelog-all
 ```
 
 # Build
@@ -56,5 +58,5 @@ docker run -v /Projects/my-dotnet-app:/mount/ -v ~/.gitconfig:/root/.gitconfig s
 ## Build the image
 
 ```
-docker build . -t sergo-gmbh/versionize:<version>
+docker build . --file Dockerfile --tag sergogmbh/versionize:$(date +%s)
 ```
