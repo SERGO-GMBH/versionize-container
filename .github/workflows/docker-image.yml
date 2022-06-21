@@ -22,7 +22,7 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag sergogmbh/versionize:${{ github.ref }} --tag sergogmbh/versionize:latest
+      run: docker build . --file Dockerfile --tag sergogmbh/versionize:${{ github.ref_name }} --tag sergogmbh/versionize:latest
 
     - name: Docker Push
       run: docker push sergogmbh/versionize --all-tags
@@ -34,7 +34,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        release_name: Release ${{ github.ref_name }}
         body: |
           Please check [README](https://github.com/SERGO-GMBH/versionize-container/blob/main/README.md) to see how you can use this project.
         draft: false
