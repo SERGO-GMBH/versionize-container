@@ -2,9 +2,8 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*'
 
 jobs:
 
@@ -14,13 +13,29 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: docker login
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag sergogmbh/versionize:${{github.run_number}} --tag sergogmbh/versionize:latest
+      run: docker build . --file Dockerfile --tag sergogmbh/versionize${{ github.ref }} --tag sergogmbh/versionize:latest
+
     - name: Docker Push
       run: docker push sergogmbh/versionize --all-tags
+
+    - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Please check [README](https://github.com/SERGO-GMBH/versionize-container/blob/main/README.md) to see how you can use this project.
+          draft: false
+          prerelease: false
