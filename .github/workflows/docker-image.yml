@@ -27,9 +27,15 @@ jobs:
     - name: Docker Push
       run: docker push sergogmbh/versionize --all-tags
 
-    - name: Create a Release
-      uses: elgohr/Github-Release-Action@v4
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        title: Release ${{ github.ref_name }}
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref_name }}
+        body: |
+          Please check [README](https://github.com/SERGO-GMBH/versionize-container/blob/main/README.md) to see how you can use this project.
+        draft: false
+        prerelease: false
